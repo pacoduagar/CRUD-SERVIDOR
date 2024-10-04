@@ -5,29 +5,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Crear Producto</title>
-<script>
-        // Function to display pop-up messages
-        function showAlert(message, type) {
-            if (message) {
-                alert(message);
-            }
-        }
-
-        // Call the showAlert function on page load if there's a message
-        window.onload = function() {
-            const message = '<%= request.getAttribute("message") != null ? request.getAttribute("message") : "" %>';
-            const messageType = '<%= request.getAttribute("messageType") != null ? request.getAttribute("messageType") : "" %>';
-            if (message) {
-                showAlert(message, messageType);
-            }
-        }
-    </script>
 </head>
 <body>
 	<h1>Crear Producto</h1>
 	<h2><a href="index.jsp">Volver al Index</a></h2>
 	<form action="productos" method="post">
-		<input type="hidden" name="opcion" value="guardar">   
+		<input type="hidden" name="opcion" value="guardar">  
+		<input type="hidden" name="sourcePage" value="crear.jsp"> 
 		<table border="1">
 			<tr>
 				<td>Nombre:</td>
@@ -44,5 +28,17 @@
 		</table>
 		  <input type="submit" value="Guardar">  
 	</form>
+	<h2>
+	<%
+	String mensaje = (String) request.getAttribute("message");
+	%>
+	<%
+	if (mensaje != null) {
+	%>
+	<%=mensaje%>
+	<%
+	}
+	%>
+	</h2>
 </body>
 </html>

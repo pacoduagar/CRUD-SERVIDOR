@@ -6,51 +6,29 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Listar Productos</title>
-<script>
-        // Function to display pop-up messages
-        function showAlert(message, type) {
-            if (message) {
-                alert(message);
-            }
-        }
-
-        // Call the showAlert function on page load if there's a message
-        window.onload = function() {
-            const message = '<%= request.getAttribute("message") != null ? request.getAttribute("message") : "" %>';
-            const messageType = '<%= request.getAttribute("messageType") != null ? request.getAttribute("messageType") : "" %>';
-            if (message) {
-                showAlert(message, messageType);
-            }
-        }
-    </script>
 </head>
 <body>
 	<h1>Listar Productos</h1>
 	<h2><a href="index.jsp">Volver al Index</a></h2>
 	<table border="1">
 		<tr>
-			<td>Id</td>
+			<td>Accion 1</td>
 			<td>Nombre</td>
 			<td>Cantidad</td>
 			<td>Precio</td>
 			<td>Fecha Creacion</td>
 			<td>Fecha Actualizacion</td>
-			<td>Accion</td>
+			<td>Accion 2</td>
 		</tr>
 		<c:forEach var="producto" items="${lista}">
 			<tr>
-				<td><a
-					href="productos?opcion=meditar&id=<c:out value="${ producto.id}"></c:out>">
-						<c:out value="${ producto.id}"></c:out>
-				</a></td>
+				<td><button><a href="productos?opcion=meditar&id=<c:out value="${ producto.id}"></c:out>">Editar</a></button></td>
 				<td><c:out value="${ producto.nombre}"></c:out></td>
 				<td><c:out value="${ producto.cantidad}"></c:out></td>
 				<td><c:out value="${ producto.precio}"></c:out></td>
 				<td><c:out value="${ producto.fechaCrear}"></c:out></td>
 				<td><c:out value="${ producto.fechaActualizar}"></c:out></td>
-				<td><a
-					href="productos?opcion=eliminar&id=<c:out value="${ producto.id}"></c:out>">
-						Eliminar </a></td>
+				<td><button><a href="productos?opcion=eliminar&id=<c:out value="${ producto.id}"></c:out>">Eliminar</a></button></td>
 			</tr>
 		</c:forEach>
 	</table>
@@ -58,6 +36,7 @@
 	<h2><a href="index.jsp">Volver al Index</a></h2>
 	<form action="productos" method="post">
 		  <input type="hidden" name="opcion" value="guardar">   
+			<input type="hidden" name="sourcePage" value="listar.jsp">
 		<table border="1">
 			<tr>
 				<td>Nombre:</td>
@@ -74,5 +53,17 @@
 		</table>
 		  <input type="submit" value="Guardar">  
 	</form>
+	<h2>
+	<%
+	String mensaje = (String) request.getAttribute("message");
+	%>
+	<%
+	if (mensaje != null) {
+	%>
+	<%=mensaje%>
+	<%
+	}
+	%>
+	</h2>
 </body>
 </html>

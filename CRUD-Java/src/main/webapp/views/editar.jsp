@@ -33,5 +33,17 @@
 		</table>
 		<input type="submit" value="Guardar">
 	</form>
+	<h2>
+	<%
+	String mensaje = (String) request.getAttribute("message");
+	%>
+	<%
+	if (mensaje != null) {
+	%>
+	<%=mensaje%>
+	<%
+	}
+	%>
+	</h2>
 </body>
 </html>
