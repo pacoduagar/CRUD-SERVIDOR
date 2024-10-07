@@ -5,6 +5,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Crear Producto</title>
+<link rel="stylesheet" href="style/styles.css">
+
 </head>
 <body>
 	<h1>Crear Producto</h1>

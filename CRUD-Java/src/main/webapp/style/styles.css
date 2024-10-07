@@ -1,0 +1,102 @@
+@charset "UTF-8";
+
+body {
+	font-family: Arial, sans-serif;
+	background-color: #f4f4f4;
+	margin: 0;
+	padding: 20px;
+}
+
+h1 {
+	color: #333;
+	text-align: center;
+}
+
+h2 a {
+	text-decoration: none;
+	color: #007bff;
+	font-size: 14px;
+}
+
+h2 a:hover {
+	text-decoration: underline;
+}
+
+form {
+	max-width: 600px;
+	margin: 20px auto;
+	background: #fff;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+table {
+	width: 100%;
+	margin-bottom: 20px;
+}
+
+table, td {
+	border-collapse: collapse;
+	padding: 10px;
+}
+
+td {
+	border: 1px solid #ddd;
+}
+
+input[type="text"], input[type="submit"] {
+	width: 100%;
+	padding: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border-radius: 4px;
+	border: 1px solid #ccc;
+	box-sizing: border-box;
+}
+
+input[type="submit"] {
+	background-color: #007bff;
+	color: white;
+	border: none;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+input[type="submit"]:hover {
+	background-color: #0056b3;
+}
+
+h2 {
+	text-align: center;
+	color: #333;
+}
+
+button {
+	background-color: #007bff;
+	color: white;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+button:hover {
+	background-color: #0056b3;
+}
+
+button:active {
+	background-color: #004494;
+}
+
+button:disabled {
+	background-color: #cccccc;
+	cursor: not-allowed;
+}
+
+button a{
+	color: white
+}

@@ -6,10 +6,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Listar Productos</title>
+<link rel="stylesheet" href="style/styles.css">
 </head>
 <body>
 	<h1>Listar Productos</h1>
-	<h2><a href="index.jsp">Volver al Index</a></h2>
+	<h2>
+		<a href="index.jsp">Volver al Index</a>
+	</h2>
 	<table border="1">
 		<tr>
 			<td>Accion 1</td>
@@ -22,21 +25,29 @@
 		</tr>
 		<c:forEach var="producto" items="${lista}">
 			<tr>
-				<td><button><a href="productos?opcion=meditar&id=<c:out value="${ producto.id}"></c:out>">Editar</a></button></td>
+				<td><button>
+						<a
+							href="productos?opcion=meditar&id=<c:out value="${ producto.id}"></c:out>">Editar</a>
+					</button></td>
 				<td><c:out value="${ producto.nombre}"></c:out></td>
 				<td><c:out value="${ producto.cantidad}"></c:out></td>
 				<td><c:out value="${ producto.precio}"></c:out></td>
 				<td><c:out value="${ producto.fechaCrear}"></c:out></td>
 				<td><c:out value="${ producto.fechaActualizar}"></c:out></td>
-				<td><button><a href="productos?opcion=eliminar&id=<c:out value="${ producto.id}"></c:out>">Eliminar</a></button></td>
+				<td><button>
+						<a
+							href="productos?opcion=eliminar&id=<c:out value="${ producto.id}"></c:out>">Eliminar</a>
+					</button></td>
 			</tr>
 		</c:forEach>
 	</table>
-		<h1>Crear Producto</h1>
-	<h2><a href="index.jsp">Volver al Index</a></h2>
+	<h1>Crear Producto</h1>
+	<h2>
+		<a href="index.jsp">Volver al Index</a>
+	</h2>
 	<form action="productos" method="post">
-		  <input type="hidden" name="opcion" value="guardar">   
-			<input type="hidden" name="sourcePage" value="listar.jsp">
+		  <input type="hidden" name="opcion" value="guardar">    <input
+			type="hidden" name="sourcePage" value="listar.jsp">
 		<table border="1">
 			<tr>
 				<td>Nombre:</td>
@@ -54,16 +65,16 @@
 		  <input type="submit" value="Guardar">  
 	</form>
 	<h2>
-	<%
-	String mensaje = (String) request.getAttribute("message");
-	%>
-	<%
-	if (mensaje != null) {
-	%>
-	<%=mensaje%>
-	<%
-	}
-	%>
+		<%
+		String mensaje = (String) request.getAttribute("message");
+		%>
+		<%
+		if (mensaje != null) {
+		%>
+		<%=mensaje%>
+		<%
+		}
+		%>
 	</h2>
 </body>
 </html>

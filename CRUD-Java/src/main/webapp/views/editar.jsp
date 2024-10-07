@@ -6,6 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Editar Producto</title>
+<link rel="stylesheet" href="style/styles.css">
 </head>
 <body>
 	<h1>Editar Producto</h1>
