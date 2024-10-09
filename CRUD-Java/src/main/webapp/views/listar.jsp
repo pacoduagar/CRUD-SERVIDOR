@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -25,29 +26,34 @@
 		</tr>
 		<c:forEach var="producto" items="${lista}">
 			<tr>
-				<td><button>
-						<a
-							href="productos?opcion=meditar&id=<c:out value="${ producto.id}"></c:out>">Editar</a>
-					</button></td>
+				<td><button><a href="productos?opcion=meditar&id=<c:out value="${ producto.id}"></c:out>">Editar</a></button></td>
 				<td><c:out value="${ producto.nombre}"></c:out></td>
 				<td><c:out value="${ producto.cantidad}"></c:out></td>
 				<td><c:out value="${ producto.precio}"></c:out></td>
-				<td><c:out value="${ producto.fechaCrear}"></c:out></td>
-				<td><c:out value="${ producto.fechaActualizar}"></c:out></td>
-				<td><button>
-						<a
-							href="productos?opcion=eliminar&id=<c:out value="${ producto.id}"></c:out>">Eliminar</a>
-					</button></td>
+				<td><fmt:formatDate value="${producto.fechaCrear}"
+                           pattern="EEEE, dd MMMM yyyy HH:mm:ss" /></td>
+                   <td><fmt:formatDate value="${producto.fechaActualizar}"
+                           pattern="EEEE, dd MMMM yyyy HH:mm:ss" /></td>
+				<td><button><a href="productos?opcion=eliminar&id=<c:out value="${ producto.id}"></c:out>">Eliminar</a></button></td>
 			</tr>
 		</c:forEach>
 	</table>
 	<h1>Crear Producto</h1>
-	<h2>
-		<a href="index.jsp">Volver al Index</a>
-	</h2>
+<h2 style="color: <%= request.getAttribute("messageType") != null && request.getAttribute("messageType").equals("success") ? "green" : "red" %>;">
+    <%
+    String mensaje = (String) request.getAttribute("message");
+    %>
+    <%
+    if (mensaje != null) {
+    %>
+        <%= mensaje %>
+    <%
+    }
+    %>
+</h2>
 	<form action="productos" method="post">
-		  <input type="hidden" name="opcion" value="guardar">    <input
-			type="hidden" name="sourcePage" value="listar.jsp">
+		  <input type="hidden" name="opcion" value="guardar">    
+		<input type="hidden" name="sourcePage" value="listar.jsp">
 		<table border="1">
 			<tr>
 				<td>Nombre:</td>
@@ -64,17 +70,6 @@
 		</table>
 		  <input type="submit" value="Guardar">  
 	</form>
-	<h2>
-		<%
-		String mensaje = (String) request.getAttribute("message");
-		%>
-		<%
-		if (mensaje != null) {
-		%>
-		<%=mensaje%>
-		<%
-		}
-		%>
-	</h2>
+
 </body>
 </html>

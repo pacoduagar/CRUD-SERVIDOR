@@ -11,10 +11,10 @@
   <h1>Menu de Opciones Productos</h1>
   <table border="1">
   <tr>
-    <td><a href="productos?opcion=crear"> Crear un Producto</a></td>
+    <td class="boton_centro"><button><a href="productos?opcion=crear"> Crear un Producto</a></button></td>
   </tr>
   <tr>
-    <td><a href="productos?opcion=listar"> Listar Productos</a></td>
+    <td class="boton_centro"><button><a href="productos?opcion=listar"> Listar Productos</a></button></td>
   </tr>
 </table>
 </body>

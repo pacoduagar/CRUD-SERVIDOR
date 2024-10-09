@@ -11,6 +11,17 @@
 <body>
 	<h1>Editar Producto</h1>
 	<h2><a href="index.jsp">Volver al Index</a></h2>
+<h2 style="color: <%= request.getAttribute("messageType") != null && request.getAttribute("messageType").equals("success") ? "green" : "red" %>;">    <%
+    String mensaje = (String) request.getAttribute("message");
+    %>
+    <%
+    if (mensaje != null) {
+    %>
+        <%= mensaje %>
+    <%
+    }
+    %>
+</h2>
 	<form action="productos" method="post">
 		<c:set var="producto" value="${producto}"></c:set>
 		<input type="hidden" name="opcion" value="editar"> <input
@@ -34,17 +45,6 @@
 		</table>
 		<input type="submit" value="Guardar">
 	</form>
-	<h2>
-	<%
-	String mensaje = (String) request.getAttribute("message");
-	%>
-	<%
-	if (mensaje != null) {
-	%>
-	<%=mensaje%>
-	<%
-	}
-	%>
-	</h2>
+
 </body>
 </html>

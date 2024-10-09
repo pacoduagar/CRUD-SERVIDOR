@@ -18,284 +18,306 @@ import com.aprendec.model.Producto;
 
 /**
  * Servlet implementation class ProductoController
+ * <p>
+ * Este servlet se encarga de administrar las peticiones relacionadas con la tabla de productos.
+ * Permite realizar operaciones como crear, listar, editar y eliminar productos.
+ * </p>
  */
 @WebServlet(description = "administra peticiones para la tabla productos", urlPatterns = { "/productos" })
 public class ProductoController extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public ProductoController() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * Constructor por defecto para ProductoController.
+     */
+    public ProductoController() {
+        super();
+    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
+    /**
+     * Método que maneja las peticiones HTTP GET.
+     * <p>
+     * Dependiendo del parámetro "opcion", este método puede crear, listar, editar o eliminar productos.
+     * </p>
+     *
+     * @param request  la solicitud HTTP
+     * @param response la respuesta HTTP
+     * @throws ServletException si ocurre un error en la servlet
+     * @throws IOException      si ocurre un error de entrada/salida
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String opcion = request.getParameter("opcion");
 
-		String opcion = request.getParameter("opcion");
+        if (opcion.equals("crear")) {
+            System.out.println("Usted ha presionado la opción crear");
+            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/crear.jsp");
+            requestDispatcher.forward(request, response);
+        } else if (opcion.equals("listar")) {
 
-		if (opcion.equals("crear")) {
-			System.out.println("Usted a presionado la opcion crear");
-			RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/crear.jsp");
-			requestDispatcher.forward(request, response);
-		} else if (opcion.equals("listar")) {
+            ProductoDAO productoDAO = new ProductoDAO();
+            List<Producto> lista = new ArrayList<>();
+            try {
+                lista = productoDAO.obtenerProductos();
+                for (Producto producto : lista) {
+                    System.out.println(producto);
+                }
 
-			ProductoDAO productoDAO = new ProductoDAO();
-			List<Producto> lista = new ArrayList<>();
-			try {
-				lista = productoDAO.obtenerProductos();
-				for (Producto producto : lista) {
-					System.out.println(producto);
-				}
+                request.setAttribute("lista", lista);
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/listar.jsp");
+                requestDispatcher.forward(request, response);
 
-				request.setAttribute("lista", lista);
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/listar.jsp");
-				requestDispatcher.forward(request, response);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+            System.out.println("Usted ha presionado la opción listar");
+        } else if (opcion.equals("meditar")) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            System.out.println("Editar id: " + id);
+            ProductoDAO productoDAO = new ProductoDAO();
+            Producto p = new Producto();
+            try {
+                p = productoDAO.obtenerProducto(id);
+                System.out.println(p);
+                request.setAttribute("producto", p);
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/editar.jsp");
+                requestDispatcher.forward(request, response);
 
-			System.out.println("Usted a presionado la opcion listar");
-		} else if (opcion.equals("meditar")) {
-			int id = Integer.parseInt(request.getParameter("id"));
-			System.out.println("Editar id: " + id);
-			ProductoDAO productoDAO = new ProductoDAO();
-			Producto p = new Producto();
-			try {
-				p = productoDAO.obtenerProducto(id);
-				System.out.println(p);
-				request.setAttribute("producto", p);
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/editar.jsp");
-				requestDispatcher.forward(request, response);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
 
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+        } else if (opcion.equals("eliminar")) {
+            ProductoDAO productoDAO = new ProductoDAO();
+            int id = Integer.parseInt(request.getParameter("id"));
+            List<Producto> lista = new ArrayList<>();
+            try {
+                productoDAO.eliminar(id);
+                lista = productoDAO.obtenerProductos();
+                for (Producto producto : lista) {
+                    System.out.println(producto);
+                }
+                request.setAttribute("lista", lista);
+                System.out.println("Registro eliminado satisfactoriamente...");
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/listar.jsp");
+                requestDispatcher.forward(request, response);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-		} else if (opcion.equals("eliminar")) {
-			ProductoDAO productoDAO = new ProductoDAO();
-			int id = Integer.parseInt(request.getParameter("id"));
-			List<Producto> lista = new ArrayList<>();
-			try {
-				productoDAO.eliminar(id);
-				lista = productoDAO.obtenerProductos();
-				for (Producto producto : lista) {
-					System.out.println(producto);
-				}
-				request.setAttribute("lista", lista);
-				System.out.println("Registro eliminado satisfactoriamente...");
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/listar.jsp");
-				requestDispatcher.forward(request, response);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+    /**
+     * Método que maneja las peticiones HTTP POST.
+     * <p>
+     * Dependiendo del parámetro "opcion", este método puede guardar o editar un producto.
+     * También realiza la validación de entrada para los campos de nombre, cantidad y precio.
+     * </p>
+     *
+     * @param request  la solicitud HTTP
+     * @param response la respuesta HTTP
+     * @throws ServletException si ocurre un error en la servlet
+     * @throws IOException      si ocurre un error de entrada/salida
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String opcion = request.getParameter("opcion");
+        Date fechaActual = new Date();
 
-		}
-		// response.getWriter().append("Served at: ").append(request.getContextPath());
-	}
+        if (opcion.equals("guardar")) {
+            ProductoDAO productoDAO = new ProductoDAO();
+            String nombre = request.getParameter("nombre");
+            String cantidadStr = request.getParameter("cantidad");
+            String precioStr = request.getParameter("precio");
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		String opcion = request.getParameter("opcion");
-		Date fechaActual = new Date();
+            // Validación de entrada
+            String errorMessage = null;
 
-		if (opcion.equals("guardar")) {
-			ProductoDAO productoDAO = new ProductoDAO();
-			String nombre = request.getParameter("nombre");
-			String cantidadStr = request.getParameter("cantidad");
-			String precioStr = request.getParameter("precio");
+            // Verificar si 'nombre' está vacío
+            if (nombre == null || nombre.trim().isEmpty()) {
+                errorMessage = "El nombre del producto es obligatorio.";
+            }
 
-			// Input validation
-			String errorMessage = null;
+            // Validar 'cantidad' para asegurar que es un número válido
+            double cantidad = 0;
+            try {
+                cantidad = Double.parseDouble(cantidadStr);
+                if (cantidad <= 0) {
+                    errorMessage = "La cantidad debe ser un número mayor que cero.";
+                }
+            } catch (NumberFormatException e) {
+                if (errorMessage == null) { // Solo establecer error si no se ha establecido ya
+                    errorMessage = "La cantidad debe ser un número válido.";
+                }
+            }
 
-			// Check if 'nombre' is empty
-			if (nombre == null || nombre.trim().isEmpty()) {
-				errorMessage = "El nombre del producto es obligatorio.";
-			}
+            // Validar 'precio' para asegurar que es un número válido
+            double precio = 0;
+            try {
+                precio = Double.parseDouble(precioStr);
+                if (precio <= 0) {
+                    errorMessage = "El precio debe ser un número mayor que cero.";
+                }
+            } catch (NumberFormatException e) {
+                if (errorMessage == null) { // Solo establecer error si no se ha establecido ya
+                    errorMessage = "El precio debe ser un número válido.";
+                }
+            }
 
-			// Validate 'cantidad' to ensure it's a valid number
-			double cantidad = 0;
-			try {
-				cantidad = Double.parseDouble(cantidadStr);
-				if (cantidad <= 0) {
-					errorMessage = "La cantidad debe ser un número mayor que cero.";
-				}
-			} catch (NumberFormatException e) {
-				if (errorMessage == null) { // Only set error if it's not set already
-					errorMessage = "La cantidad debe ser un número válido.";
-				}
-			}
+            try {
+                // Si hay errores de validación, mostrar un mensaje de error
+                if (errorMessage != null) {
+                    List<Producto> lista = new ArrayList<>();
+                    try {
+                        lista = productoDAO.obtenerProductos();
+                        for (Producto producto : lista) {
+                            System.out.println(producto);
+                        }
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
 
-			// Validate 'precio' to ensure it's a valid number
-			double precio = 0;
-			try {
-				precio = Double.parseDouble(precioStr);
-				if (precio <= 0) {
-					errorMessage = "El precio debe ser un número mayor que cero.";
-				}
-			} catch (NumberFormatException e) {
-				if (errorMessage == null) { // Only set error if it's not set already
-					errorMessage = "El precio debe ser un número válido.";
-				}
-			}
+                    String sourcePage = request.getParameter("sourcePage");
+                    request.setAttribute("lista", lista);
+                    request.setAttribute("message", errorMessage);
+                    request.setAttribute("messageType", "error");
+                    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/" + sourcePage);
+                    requestDispatcher.forward(request, response);
 
-			try {
-				// If there are validation errors, show an error message
-				if (errorMessage != null) {
-					request.setAttribute("message", errorMessage);
-					request.setAttribute("messageType", "error");
-					RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/listar.jsp");
-					requestDispatcher.forward(request, response);
-					return; // Stop further execution if validation fails
-				}
+                    return; // Detener la ejecución si la validación falla
+                }
 
-				// Check if product with the same name already exists
-				Producto existingProduct = productoDAO.obtenerProductoPorNombre(nombre);
-				if (existingProduct != null) {
-					request.setAttribute("message", "El producto ya existe.");
-					request.setAttribute("messageType", "error");
-				} else {
-					// Create new product
-					Producto producto = new Producto();
-					producto.setNombre(nombre);
-					producto.setCantidad(cantidad);
-					producto.setPrecio(precio);
-					producto.setFechaCrear(new java.sql.Date(fechaActual.getTime()));
-					producto.setFechaActualizar(null); // Initially, no update date
+                // Verificar si ya existe un producto con el mismo nombre
+                Producto existingProduct = productoDAO.obtenerProductoPorNombre(nombre);
+                if (existingProduct != null) {
+                    request.setAttribute("message", "El producto ya existe.");
+                    request.setAttribute("messageType", "error");
+                } else {
+                    // Crear un nuevo producto
+                    Producto producto = new Producto();
+                    producto.setNombre(nombre);
+                    producto.setCantidad(cantidad);
+                    producto.setPrecio(precio);
+                    producto.setFechaCrear(new java.sql.Timestamp(fechaActual.getTime()));
+                    producto.setFechaActualizar(null); // Inicialmente, no hay fecha de actualización
 
-					boolean isSaved = productoDAO.guardar(producto);
+                    boolean isSaved = productoDAO.guardar(producto);
 
-					if (isSaved) {
-						request.setAttribute("message", "Producto guardado satisfactoriamente.");
-						request.setAttribute("messageType", "success");
-					} else {
-						request.setAttribute("message", "Error al guardar el producto.");
-						request.setAttribute("messageType", "error");
-					}
-				}
+                    if (isSaved) {
+                        request.setAttribute("message", "Producto guardado satisfactoriamente.");
+                        request.setAttribute("messageType", "success");
+                    } else {
+                        request.setAttribute("message", "Error al guardar el producto.");
+                        request.setAttribute("messageType", "error");
+                    }
+                }
 
-				List<Producto> lista = new ArrayList<>();
-				try {
-					lista = productoDAO.obtenerProductos();
-					for (Producto producto : lista) {
-						System.out.println(producto);
-					}
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+                List<Producto> lista = new ArrayList<>();
+                try {
+                    lista = productoDAO.obtenerProductos();
+                    for (Producto producto : lista) {
+                        System.out.println(producto);
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
 
-				String sourcePage = request.getParameter("sourcePage");				
-				request.setAttribute("lista", lista);
+                String sourcePage = request.getParameter("sourcePage");
+                request.setAttribute("lista", lista);
                 RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/" + sourcePage);
                 requestDispatcher.forward(request, response);
 
-			} catch (SQLException e) {
-				request.setAttribute("message", "Error en la base de datos.");
-				request.setAttribute("messageType", "error");
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
-				requestDispatcher.forward(request, response);
-				e.printStackTrace();
-			}
-		} else if (opcion.equals("editar")) {
-	        ProductoDAO productoDAO = new ProductoDAO();
-	        int id = Integer.parseInt(request.getParameter("id"));
-	        String nombre = request.getParameter("nombre");
-	        String cantidadStr = request.getParameter("cantidad");
-	        String precioStr = request.getParameter("precio");
+            } catch (SQLException e) {
+                request.setAttribute("message", "Error en la base de datos.");
+                request.setAttribute("messageType", "error");
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("index.jsp");
+                requestDispatcher.forward(request, response);
+                e.printStackTrace();
+            }
+        } else if (opcion.equals("editar")) {
+            ProductoDAO productoDAO = new ProductoDAO();
+            int id = Integer.parseInt(request.getParameter("id"));
+            String nombre = request.getParameter("nombre");
+            String cantidadStr = request.getParameter("cantidad");
+            String precioStr = request.getParameter("precio");
 
-	        // Input validation
-	        String errorMessage = null;
+            // Validación de entrada
+            String errorMessage = null;
 
-	        // Check if 'nombre' is empty
-	        if (nombre == null || nombre.trim().isEmpty()) {
-	            errorMessage = "El nombre del producto es obligatorio.";
-	        }
+            // Verificar si 'nombre' está vacío
+            if (nombre == null || nombre.trim().isEmpty()) {
+                errorMessage = "El nombre del producto es obligatorio.";
+            }
 
-	        // Validate 'cantidad' to ensure it's a valid number
-	        double cantidad = 0;
-	        try {
-	            cantidad = Double.parseDouble(cantidadStr);
-	            if (cantidad <= 0) {
-	                errorMessage = "La cantidad debe ser un número mayor que cero.";
-	            }
-	        } catch (NumberFormatException e) {
-	            if (errorMessage == null) {  // Only set error if it's not set already
-	                errorMessage = "La cantidad debe ser un número válido.";
-	            }
-	        }
+            // Validar 'cantidad' para asegurar que es un número válido
+            double cantidad = 0;
+            try {
+                cantidad = Double.parseDouble(cantidadStr);
+                if (cantidad <= 0) {
+                    errorMessage = "La cantidad debe ser un número mayor que cero.";
+                }
+            } catch (NumberFormatException e) {
+                if (errorMessage == null) {  // Solo establecer error si no se ha establecido ya
+                    errorMessage = "La cantidad debe ser un número válido.";
+                }
+            }
 
-	        // Validate 'precio' to ensure it's a valid number
-	        double precio = 0;
-	        try {
-	            precio = Double.parseDouble(precioStr);
-	            if (precio <= 0) {
-	                errorMessage = "El precio debe ser un número mayor que cero.";
-	            }
-	        } catch (NumberFormatException e) {
-	            if (errorMessage == null) {  // Only set error if it's not set already
-	                errorMessage = "El precio debe ser un número válido.";
-	            }
-	        }
+            // Validar 'precio' para asegurar que es un número válido
+            double precio = 0;
+            try {
+                precio = Double.parseDouble(precioStr);
+                if (precio <= 0) {
+                    errorMessage = "El precio debe ser un número mayor que cero.";
+                }
+            } catch (NumberFormatException e) {
+                if (errorMessage == null) {  // Solo establecer error si no se ha establecido ya
+                    errorMessage = "El precio debe ser un número válido.";
+                }
+            }
 
-	        try {
-	            // If there are validation errors, show an error message
-	            if (errorMessage != null) {
-	                request.setAttribute("message", errorMessage);
-	                request.setAttribute("messageType", "error");
-	                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/editar.jsp");
-	                requestDispatcher.forward(request, response);
-	                return;  // Stop further execution if validation fails
-	            }
+            try {
+                // Si hay errores de validación, mostrar un mensaje de error
+                if (errorMessage != null) {
+                    request.setAttribute("message", errorMessage);
+                    request.setAttribute("messageType", "error");
+                    RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/editar.jsp");
+                    requestDispatcher.forward(request, response);
+                    return;  // Detener la ejecución si la validación falla
+                }
 
-	            // Proceed with updating the product
-	            Producto producto = productoDAO.obtenerProducto(id);
-	            if (producto != null) {
-	                producto.setNombre(nombre);
-	                producto.setCantidad(cantidad);
-	                producto.setPrecio(precio);
-	                producto.setFechaActualizar(new java.sql.Date(fechaActual.getTime()));
+                // Proceder a actualizar el producto
+                Producto producto = productoDAO.obtenerProducto(id);
+                if (producto != null) {
+                    producto.setNombre(nombre);
+                    producto.setCantidad(cantidad);
+                    producto.setPrecio(precio);
+                    producto.setFechaActualizar(new java.sql.Timestamp(fechaActual.getTime()));
 
-	                boolean isUpdated = productoDAO.editar(producto);
+                    boolean isUpdated = productoDAO.editar(producto);
 
-	                if (isUpdated) {
-	                    request.setAttribute("message", "Producto editado satisfactoriamente.");
-	                    request.setAttribute("messageType", "success");
-	                } else {
-	                    request.setAttribute("message", "Error al editar el producto.");
-	                    request.setAttribute("messageType", "error");
-	                }
-	            } else {
-	                request.setAttribute("message", "Producto no encontrado.");
-	                request.setAttribute("messageType", "error");
-	            }
+                    if (isUpdated) {
+                        request.setAttribute("message", "Producto editado satisfactoriamente.");
+                        request.setAttribute("messageType", "success");
+                    } else {
+                        request.setAttribute("message", "Error al editar el producto.");
+                        request.setAttribute("messageType", "error");
+                    }
+                } else {
+                    request.setAttribute("message", "Producto no encontrado.");
+                    request.setAttribute("messageType", "error");
+                }
 
-	            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/editar.jsp");
-	            requestDispatcher.forward(request, response);
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/editar.jsp");
+                requestDispatcher.forward(request, response);
 
-	        } catch (SQLException e) {
-	            request.setAttribute("message", "Error en la base de datos.");
-	            request.setAttribute("messageType", "error");
-	            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/editar.jsp");
-	            requestDispatcher.forward(request, response);
-	            e.printStackTrace();
-	        }
-	    }
-	}	
+            } catch (SQLException e) {
+                request.setAttribute("message", "Error en la base de datos.");
+                request.setAttribute("messageType", "error");
+                RequestDispatcher requestDispatcher = request.getRequestDispatcher("/views/editar.jsp");
+                requestDispatcher.forward(request, response);
+                e.printStackTrace();
+            }
+        }
+    }
 }
-// doGet(request, response);

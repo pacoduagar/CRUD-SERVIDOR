@@ -34,11 +34,14 @@ form {
 table {
 	width: 100%;
 	margin-bottom: 20px;
+	
 }
 
 table, td {
 	border-collapse: collapse;
 	padding: 10px;
+	display: flex;
+	justify-content: center;
 }
 
 td {
@@ -99,4 +102,9 @@ button:disabled {
 
 button a{
 	color: white
+}
+
+.boton_central{
+	text-align: center;
+	display: flex;
 }
