@@ -9,7 +9,7 @@
 </head>
 <body>
   <h1>Menu de Opciones Productos</h1>
-  <table border="1">
+  <table>
   <tr>
     <td class="boton_centro"><button><a href="productos?opcion=crear"> Crear un Producto</a></button></td>
   </tr>

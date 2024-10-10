@@ -39,7 +39,7 @@
 		</c:forEach>
 	</table>
 	<h1>Crear Producto</h1>
-<h2 style="color: <%= request.getAttribute("messageType") != null && request.getAttribute("messageType").equals("success") ? "green" : "red" %>;">
+<h2 style="color: <%= request.getAttribute("messageType") != null && request.getAttribute("messageType").equals("success") ? "lime" : "red" %>;">
     <%
     String mensaje = (String) request.getAttribute("message");
     %>

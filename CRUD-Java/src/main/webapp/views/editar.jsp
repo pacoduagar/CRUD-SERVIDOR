@@ -10,8 +10,8 @@
 </head>
 <body>
 	<h1>Editar Producto</h1>
-	<h2><a href="index.jsp">Volver al Index</a></h2>
-<h2 style="color: <%= request.getAttribute("messageType") != null && request.getAttribute("messageType").equals("success") ? "green" : "red" %>;">    <%
+	<h2><a href="productos?opcion=listar">Volver a Lista</a></h2>
+<h2 style="color: <%= request.getAttribute("messageType") != null && request.getAttribute("messageType").equals("success") ? "lime" : "red" %>;">    <%
     String mensaje = (String) request.getAttribute("message");
     %>
     <%

@@ -40,8 +40,6 @@ table {
 table, td {
 	border-collapse: collapse;
 	padding: 10px;
-	display: flex;
-	justify-content: center;
 }
 
 td {
@@ -100,11 +98,12 @@ button:disabled {
 	cursor: not-allowed;
 }
 
-button a{
+button a {
 	color: white
 }
 
-.boton_central{
-	text-align: center;
+.boton_centro {
 	display: flex;
+	justify-content: center;
+	border: none;
 }
